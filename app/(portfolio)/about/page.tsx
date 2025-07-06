@@ -78,7 +78,7 @@ const AboutPage = () => {
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 w-1/2 min-w-96">
                         <div className="text-3xl mt-20">Want to get in touch???</div>
-                        <div className="text-xl font-light">Leave a message and I will get back to you shortly.</div>
+                        <div className="text-xl font-light">Leave a message!.</div>
                         <FormField
                             control={form.control}
                             name="name"
