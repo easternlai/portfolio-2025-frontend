@@ -1,0 +1,56 @@
+#This workflow pushes changes to the container in ECR and then uses the lastest container to update the Lambda function
+
+name: Portfolio Frontend CI/CD
+
+on: 
+  push:
+    branches: [main]
+  pull_request:
+    branches:
+    - main
+
+env:
+  AWS_REGION: us-west-2
+  ECR_REPOSITORY: portfolio-frontend-2025
+  ECS_CLUSTER: prd-portfolio-us-west-2
+  ECS_SERVICE: prd-portfolio-us-west-2-frontend
+
+jobs:
+  build:
+    name: Deployment
+    runs-on: ubuntu-latest-arm64
+
+    steps:
+      - name: get short git commit SHA
+        id: commit
+        run: | 
+          SHORT_SHA=$(git rev-parse --short HEAD)
+          echo "short=$SHORT_SHA >> $GITHUB_OUTPUT"
+
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{env.AWS_REGION}}
+          
+      - name: Login to ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build, tag, and push image to Amazon ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}        
+          IMAGE_TAG: ${{ steps.commit.outputs.short }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+      - name: Deploy to ECS
+        run: |
+          aws ecs update-service \
+          --cluster ${{ECS_CLUSTER}} \
+          --service ${{ECS_SERVICE}} \
+          --force-new-deployment

@@ -59,7 +59,7 @@ const AboutPage = () => {
             });
             console.log(response)
             toast({
-                description: "Thank you for reaching out, I will reply back shortly."
+                description: "Thank you for reaching out, I will return your message shortly."
             })
             form.reset()
         } catch (error) {
