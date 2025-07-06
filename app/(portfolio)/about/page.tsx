@@ -50,7 +50,7 @@ const AboutPage = () => {
         // const data = await test.json()
         // console.log("GET: ", data);
         try {
-            const response = await fetch('https://zzdmwggv9c.execute-api.us-west-2.amazonaws.com/api/contact', {
+            const response = await fetch('https://api.easternlai.me/api/contact', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -59,7 +59,7 @@ const AboutPage = () => {
             });
             console.log(response)
             toast({
-                description: "Thank you for contacting me, I will reply back shortly."
+                description: "Thank you for reaching out, I will reply back shortly."
             })
             form.reset()
         } catch (error) {

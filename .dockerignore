@@ -1,0 +1,19 @@
+# Node dependencies
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Local build outputs
+.next
+out
+
+# System files
+.DS_Store
+
+# Git
+.git
+.gitignore
+
+# IDE/editor configs
+.vscode
+*.swp
