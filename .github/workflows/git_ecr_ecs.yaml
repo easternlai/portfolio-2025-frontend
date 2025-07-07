@@ -29,7 +29,7 @@ jobs:
         id: commit
         run: | 
           SHORT_SHA=$(git rev-parse --short HEAD)
-          echo "short=$SHORT_SHA >> $GITHUB_OUTPUT"
+          echo "short=$SHORT_SHA" >> $GITHUB_OUTPUT
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -57,7 +57,7 @@ jobs:
           --tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
           --push \
           .
-          
+
       - name: Deploy to ECS
         run: |
           aws ecs update-service \
